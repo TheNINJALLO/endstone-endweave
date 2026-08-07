@@ -11,6 +11,8 @@ from endstone_endweave.rewriter import SoundRewriter
 from .handlers.actor_event import rewrite_actor_event
 from .handlers.client_movement_prediction_sync import rewrite_client_movement_prediction_sync
 from .handlers.crafting_data import rewrite_crafting_data
+from .handlers.creative_content import rewrite_creative_content
+from .handlers.inventory_content import rewrite_inventory_content
 from .handlers.item_stack import (
     rewrite_inventory_slot,
     rewrite_mob_equipment,
@@ -42,6 +44,8 @@ def create_protocol() -> Protocol:
     p.register_clientbound(PacketId.ACTOR_EVENT, partial(rewrite_actor_event, direction=Direction.CLIENTBOUND))
     p.register_clientbound(PacketId.PLAY_SOUND, rewrite_play_sound)
     p.register_clientbound(PacketId.INVENTORY_SLOT, rewrite_inventory_slot)
+    p.register_clientbound(PacketId.INVENTORY_CONTENT, rewrite_inventory_content)
+    p.register_clientbound(PacketId.CREATIVE_CONTENT, rewrite_creative_content)
     p.register_clientbound(PacketId.PLAYER_EQUIPMENT, partial(rewrite_mob_equipment, direction=Direction.CLIENTBOUND))
     p.register_clientbound(PacketId.CRAFTING_DATA, rewrite_crafting_data)
 
@@ -51,6 +55,9 @@ def create_protocol() -> Protocol:
     p.register_serverbound(PacketId.ACTOR_EVENT, partial(rewrite_actor_event, direction=Direction.SERVERBOUND))
 
     p.cancel_clientbound(
+        PacketId.ADD_PLAYER,  # 46
+        PacketId.ADD_ITEM_ACTOR,  # 15
+        PacketId.MOB_ARMOR_EQUIPMENT,  # 32
         PacketId.LOCATOR_BAR,  # 341 -- TextureId(int) -> TexturePath(string) + IconSize(Vec2)
         PacketId.SERVER_SCRIPT_DEBUG_DRAWER,  # 328 -- ShapeDataPayload -> PrimitiveShapeDataPayload
         PacketId.CLIENTBOUND_ATTRIBUTE_LAYER_SYNC,  # 345 -- Weight switch removed

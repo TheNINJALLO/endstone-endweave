@@ -175,7 +175,9 @@ class _ItemInstanceV975Type(Type["ItemInstance"]):
         )
 
     def write(self, writer: PacketWriter, value: ItemInstance) -> None:
-        writer.write_short_le(value.network_id)
+        # network_id can exceed 32767 for custom items/blocks; Python's struct "<h" throws an error
+        # instead of overflowing like C++. Masking and writing as ushort produces the identical binary layout.
+        writer.write_ushort_le(value.network_id & 0xFFFF)
         writer.write_ushort_le(value.count)
         writer.write_uvarint(value.aux_value)
         writer.write_bool(value.has_net_id)
