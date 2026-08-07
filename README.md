@@ -20,8 +20,9 @@
 </p>
 
 <p align="center">
-  <a href="#overview">Overview</a> &bull;
-  <a href="#compatibility">Compatibility</a> &bull;
+  <a href="#what-it-does">What it does</a> &bull;
+  <a href="#how-to-use">How to use</a> &bull;
+  <a href="#commands-and-permissions">Commands</a> &bull;
   <a href="#install">Install</a> &bull;
   <a href="https://github.com/TheNINJALLO/endstone-endweave/releases">Releases</a>
 </p>
@@ -30,9 +31,21 @@
 
 Protocol translation plugin for Endstone - allows newer clients on older servers. This release is aligned with Endstone 0.11.8 and Minecraft Bedrock Dedicated Server 1.26.40, and is distributed as a Python wheel for direct installation in an Endstone server.
 
-## Capabilities
+## What it does
 
--
+- Translates supported Bedrock protocol packets so newer clients can join the targeted older server protocol.
+- Rewrites inbound, outbound, and server-list-ping traffic through a per-player translation pipeline.
+- Tracks translated sessions and notifies operators when an EndWeave update is available.
+
+## How to use
+
+1. Install the wheel and restart Endstone; no player-side mod is required.
+2. Check startup logs for the advertised client/server protocol range before allowing production traffic.
+3. Test joining with each client version you intend to support and remove the plugin if an unsupported protocol is used.
+
+## Commands and permissions
+
+This plugin registers no commands. Packet translation begins automatically for supported connections; operators with `endweave.update` receive update notices when they join.
 
 ## Compatibility
 
